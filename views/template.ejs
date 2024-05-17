@@ -1,0 +1,94 @@
+<%- include('partials/header.ejs'); -%>
+
+<!--     edit function -->
+
+    <div class="box" id="heading">
+      <h1>
+        <%= currentBook.title %>
+      </h1>
+    </div>
+    <div class="box">
+      <!-- Update add new quote Complete -->
+      <form class="item" action="/add_quote" method="post">
+        <input type="text" name="newItem" placeholder="New Quote" autocomplete="off" autofocus="true" />
+        <button class="add" type="submit" name="list" value="<%=currentBook.title %>">+</button>
+      </form>
+      <!-- Add Book Introduction Div: Cover, Author, Date Read, Introduction Complete -->
+      <div>
+        <div class="item quoteTitle">
+          <p>Book Introduction</p>
+          <!-- to update link to editpage -->
+          <a href="/edit/<%= currentBook.title %>" style="margin-left: auto;"><button class="add" style="background-color: white; margin-right: 0px; padding-right: 0px;"><img class="icon"
+            src="/assets/icons/pencil-solid.svg" alt="pencil image"></button></a>
+            <form action="/delete" method="post" class="delete" style="margin-left: 5px;">
+              <input type="checkbox" onchange="this.form.submit()" name="deleteQuoteId" value="<%= currentBook.id %>" class="deleteQuote" style="margin-bottom: 10px!important;">
+            </form>
+        </div>
+
+        <div class="item quoteTitle">
+
+          <div class="container" style="justify-content: center;">
+            <img src="<%= img %>" alt="Bookcover">
+            <div class="bookIntro">
+              <p class="biggerText">
+                <%= currentBook.author %>
+              </p>
+              <p style="font-size: 20px; padding: 10px 0px 5px 0px; font-weight: 500;">
+                Date Read: <%= currentBook.date_read %>
+              </p>
+              <p style="font-size: 20px; padding: 0px 0px 10px 0px;font-weight: 500;">
+                Rating: <%= currentBook.rating %>/10
+              </p>
+              <div class="container intro">
+
+
+                <p class="intro" style="font-weight: 500;">
+                  <%= currentBook.notes %>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="item quoteTitle">
+        <p>Favourite Quotes</p>
+      </div>
+      <% for(let item of currentQuotes){%>
+        <div class="item">
+          <!-- Quotes Complete-->
+          <div class="quoteBox">
+            <p class="intro"  id="quote<%=item.id%>">
+              <%= item.quotes %>
+            </p>
+          </div>
+            <!-- Update to edit individual quotes Complete-->
+            <form class="edit quotes" action="/edit_quote" method="post">
+              <input type="hidden" name="updatedItemId" value="<%= item.id %>">
+              <textarea name="updatedItemQuote" id="input<%=item.id%>" cols="30" rows="10" autocomplete="off" autofocus="true" hidden="true" class="quotes"><%= item.quotes.trim() %></textarea>
+              <button id="done<%=item.id%>" class="edit" type="submit" hidden><img class="icon"
+                  src="/assets/icons/check-solid.svg" alt="tick image"></button>
+            </form>
+            <button id="edit<%=item.id%>" class="edit" onclick="handler('<%=item.id%>')"><img class="icon"
+                src="/assets/icons/pencil-solid.svg" alt="pencil image"></button>
+            
+           <!-- Update to delete quote Complete-->
+                <form action="/delete_quote" method="post" class="delete">
+              <input type="checkbox" onchange="this.form.submit()" name="deleteQuoteId" value="<%= item.id %>" class="deleteQuote">
+            </form>
+          </div>
+        <% } %>
+    </div>
+  
+
+<script>
+    function handler(id) {
+      document.getElementById("quote" + id).setAttribute("hidden", true)
+      document.getElementById("edit" + id).setAttribute("hidden", true)
+      document.getElementById("done" + id).removeAttribute("hidden")
+      document.getElementById("input" + id).removeAttribute("hidden")
+    }
+  </script>
+  <%- include('partials/footer.ejs'); -%>
